@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "BKB",
+    "KCK",
+    "BKB"
+  ],
+  "key": {
+    "B": {
+      "item": "minecraft:blue_wool"
+    },
+    "K": {
+      "item": "minecraft:black_wool"
+    },
+    "C": {
+      "item": "minecraft:cod"
+    }
+  },
+  "result": {
+    "item": "merluzos:hake_block",
+    "count": 9
+  }
+}
