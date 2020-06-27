@@ -48,7 +48,8 @@ public final class ModEventSubscriber {
 		final IForgeRegistry<Item> registry = event.getRegistry();
 		registry.registerAll(
 				// This is a very simple Item. It has no special properties except for being on our creative tab.
-				setup(new HamKnifeItem(ItemTier.DIAMOND, 10, -1F, (new Item.Properties()).group(ModItemGroups.MOD_ITEM_GROUP)), "ham_knife")
+				setup(new HamKnifeItem(ItemTier.DIAMOND, 10, -1F, (new Item.Properties()).group(ModItemGroups.MOD_ITEM_GROUP)), "ham_knife"),
+				setup(new Item(new Item.Properties().group(ModItemGroups.MOD_ITEM_GROUP).food(new Food.Builder().hunger(8).saturation(0.8F).meat().build())), "fuet")
 		);
 
 		// We need to go over the entire registry so that we include any potential Registry Overrides
