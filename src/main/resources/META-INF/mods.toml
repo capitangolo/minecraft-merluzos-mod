@@ -8,7 +8,7 @@
 modLoader="javafml" #mandatory
 
 # A version range to match for said mod loader - for regular FML @Mod it will be the forge version
-loaderVersion="[35,)" #mandatory This is typically bumped every Minecraft version by Forge. See our download page for lists of versions.
+loaderVersion="[38,)" #mandatory This is typically bumped every Minecraft version by Forge. See our download page for lists of versions.
 
 # The license for you mod. This is mandatory metadata and allows for easier comprehension of your redistributive properties.
 # Review your options at https://choosealicense.com/. All rights reserved is the default copyright stance, and is thus the default here.
@@ -22,7 +22,7 @@ issueTrackerURL="https://github.com/capitangolo/minecraft-merluzos-mod/issues" #
 # The modid of the mod
 modId="merluzos"
 # The version number of the mod - there's a few well known ${} variables useable here or just hardcode it
-version="${version}" #mandatory
+version="${file.jarVersion}" #mandatory
 # A display name for the mod
 displayName="Merluzo's random stuff" #mandatory
 # A URL to query for updates for this mod. See the JSON update specification <here>
@@ -44,13 +44,13 @@ Random blocks and stuff for the Aparticos.com livestreams
 [[dependencies.merluzos]]
 modId="forge"
 mandatory=true
-versionRange="[35,)"
+versionRange="[38,)"
 ordering="NONE"
 side="BOTH"
 
 [[dependencies.merluzos]]
 modId="minecraft"
 mandatory=true
-versionRange="[1.16.4]"
+versionRange="[1.18]"
 ordering="NONE"
 side="BOTH"

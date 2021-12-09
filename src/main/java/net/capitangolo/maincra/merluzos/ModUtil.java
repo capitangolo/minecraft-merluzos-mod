@@ -1,6 +1,6 @@
 package net.capitangolo.maincra.merluzos;
 
-import net.minecraft.util.Direction;
+import net.minecraft.core.Direction;
 import net.minecraftforge.energy.EnergyStorage;
 
 import javax.annotation.Nonnull;

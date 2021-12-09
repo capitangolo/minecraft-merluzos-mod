@@ -1,17 +1,16 @@
 package net.capitangolo.maincra.merluzos;
 
-import net.capitangolo.maincra.merluzos.init.ModItemGroups;
 import com.google.common.base.Preconditions;
 import net.capitangolo.maincra.merluzos.item.HamKnifeItem;
-import net.minecraft.block.Block;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.material.MaterialColor;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.item.*;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.extensions.IForgeContainerType;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MaterialColor;
+import net.minecraft.world.item.*;
+import net.minecraft.world.food.FoodProperties;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -27,14 +26,27 @@ import javax.annotation.Nonnull;
 @EventBusSubscriber(modid = MerluzosMod.MODID, bus = EventBusSubscriber.Bus.MOD)
 public final class ModEventSubscriber {
 
+  public static final CreativeModeTab ITEM_GROUP = new CreativeModeTab(MerluzosMod.MODID) {
+    @Override
+    public ItemStack makeIcon() {
+      return new ItemStack(ModEventSubscriber.HAKE_BLOCK);
+    }
+  };
+
 	private static final Logger LOGGER = LogManager.getLogger(MerluzosMod.MODID + " Mod Event Subscriber");
 
+  public static final Block HAKE_BLOCK = new Block(BlockBehaviour.Properties.of(Material.WOOL).strength(1.0F).sound(SoundType.WOOL));
+  public static final Block APARATICOS_BLOCK = new Block(BlockBehaviour.Properties.of(Material.WOOL).strength(1.0F).sound(SoundType.WOOL));
+
+  public static final Item HAM_KNIFE = new HamKnifeItem(Tiers.DIAMOND, 10, -1F, (new Item.Properties().tab(ModEventSubscriber.ITEM_GROUP)));
+  public static final Item FUET = new Item(new Item.Properties().food(new FoodProperties.Builder().nutrition(8).saturationMod(0.8F).meat().build()).tab(ModEventSubscriber.ITEM_GROUP));
+
 	@SubscribeEvent
-	public static void onRegisterBlocks(final RegistryEvent.Register<Block> event) {
+	public static void registerBlocks(final RegistryEvent.Register<Block> event) {
 		// Register all your blocks inside this registerAll call
 		event.getRegistry().registerAll(
-				setup(new Block(Block.Properties.create(Material.WOOL).hardnessAndResistance(1.0F).sound(SoundType.CLOTH)), "hake_block"),
-				setup(new Block(Block.Properties.create(Material.WOOL).hardnessAndResistance(1.0F).sound(SoundType.CLOTH)), "aparaticos_block")
+				setup(ModEventSubscriber.HAKE_BLOCK, "hake_block"),
+				setup(ModEventSubscriber.APARATICOS_BLOCK, "aparaticos_block")
     );
 		LOGGER.debug("Registered Blocks");
 	}
@@ -44,12 +56,12 @@ public final class ModEventSubscriber {
 	 * This method will always be called after the Block registry method.
 	 */
 	@SubscribeEvent
-	public static void onRegisterItems(final RegistryEvent.Register<Item> event) {
+	public static void registerItems(final RegistryEvent.Register<Item> event) {
 		final IForgeRegistry<Item> registry = event.getRegistry();
 		registry.registerAll(
 				// This is a very simple Item. It has no special properties except for being on our creative tab.
-				setup(new HamKnifeItem(ItemTier.DIAMOND, 10, -1F, (new Item.Properties()).group(ModItemGroups.MOD_ITEM_GROUP)), "ham_knife"),
-				setup(new Item(new Item.Properties().group(ModItemGroups.MOD_ITEM_GROUP).food(new Food.Builder().hunger(8).saturation(0.8F).meat().build())), "fuet")
+				setup(ModEventSubscriber.HAM_KNIFE, "ham_knife"),
+				setup(ModEventSubscriber.FUET, "fuet")
 		);
 
 		// We need to go over the entire registry so that we include any potential Registry Overrides
@@ -72,7 +84,7 @@ public final class ModEventSubscriber {
 //			}
 
 			// Make the properties, and make it so that the item will be on our ItemGroup (CreativeTab)
-			final Item.Properties properties = new Item.Properties().group(ModItemGroups.MOD_ITEM_GROUP);
+			final Item.Properties properties = new Item.Properties().tab(ModEventSubscriber.ITEM_GROUP);
 			// Create the new BlockItem with the block and it's properties
 			final BlockItem blockItem = new BlockItem(block, properties);
 			// Setup the new BlockItem with the block's registry name and register it
@@ -80,54 +92,6 @@ public final class ModEventSubscriber {
 		}
 		LOGGER.debug("Registered Items");
 	}
-
-	/**
-	 * This method will be called by Forge when it is time for the mod to register its TileEntityType.
-	 * This method will always be called after the Block and Item registry methods.
-	 */
-	@SubscribeEvent
-	public static void onRegisterTileEntityTypes(@Nonnull final RegistryEvent.Register<TileEntityType<?>> event) {
-		// Register your TileEntityTypes here if you have them
-		event.getRegistry().registerAll(
-				// We don't have a datafixer for our TileEntity, so we pass null into build
-//				setup(TileEntityType.Builder.create(MiniModelTileEntity::new, ModBlocks.MINI_MODEL).build(null), "mini_model"),
-//				setup(TileEntityType.Builder.create(HeatCollectorTileEntity::new, ModBlocks.HEAT_COLLECTOR).build(null), "heat_collector"),
-//				setup(TileEntityType.Builder.create(ElectricFurnaceTileEntity::new, ModBlocks.ELECTRIC_FURNACE).build(null), "electric_furnace"),
-//				setup(TileEntityType.Builder.create(ModFurnaceTileEntity::new, ModBlocks.MOD_FURNACE).build(null), "mod_furnace")
-		);
-		LOGGER.debug("Registered TileEntityTypes");
-	}
-
-	/**
-	 * This method will be called by Forge when it is time for the mod to register its ContainerTypes.
-	 * This method will always be called after the Block and Item registry methods.
-	 */
-	@SubscribeEvent
-	public static void onRegisterContainerTypes(@Nonnull final RegistryEvent.Register<ContainerType<?>> event) {
-		// Register your ContainerTypes here if you have them
-		event.getRegistry().registerAll(
-//				setup(IForgeContainerType.create(HeatCollectorContainer::new), "heat_collector"),
-//				setup(IForgeContainerType.create(ElectricFurnaceContainer::new), "electric_furnace"),
-//				setup(IForgeContainerType.create(ModFurnaceContainer::new), "mod_furnace")
-		);
-		LOGGER.debug("Registered ContainerTypes");
-	}
-
-	/**
-	 * This method will be called by Forge when a config changes.
-	 *//*
-	@SubscribeEvent
-	public static void onModConfigEvent(final ModConfig.ModConfigEvent event) {
-		final ModConfig config = event.getConfig();
-		// Rebake the configs when they change
-		if (config.getSpec() == ConfigHolder.CLIENT_SPEC) {
-			ConfigHelper.bakeClient(config);
-			LOGGER.debug("Baked client config");
-		} else if (config.getSpec() == ConfigHolder.SERVER_SPEC) {
-			ConfigHelper.bakeServer(config);
-			LOGGER.debug("Baked server config");
-		}
-	}*/
 
 	/**
 	 * Performs setup on a registry entry
@@ -152,5 +116,4 @@ public final class ModEventSubscriber {
 		entry.setRegistryName(registryName);
 		return entry;
 	}
-
 }
